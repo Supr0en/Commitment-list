@@ -5,18 +5,41 @@ import React from 'react';
 import { confirmPromise } from "../helpers/AsyncStorage";
 
 const PromiseItem = ({ id, name, endDate, onUpdate }: ItemProps) => {
+   const [confirmMenu, setConfirmMenu] = React.useState<boolean>(false);
+   const timerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
    const handlePromiseUpdate = async () => {
       try {
          const updatedPromises = await confirmPromise(id)
          onUpdate(updatedPromises);
-      } catch (error) {
+      }
+      catch (error) {
          console.error('handling promise update', error)
       }
    }
-   const [confirmMenu, setConfirmMenu] = React.useState<boolean>(false);
+   const handleConfirmMenu = () => {
+      setConfirmMenu(!confirmMenu);
+   };
+
+   React.useEffect(() => {
+      if (confirmMenu) {
+         timerRef.current = setTimeout(() => {
+            setConfirmMenu(false);
+            timerRef.current = null;
+         }, 7000);
+      }
+
+      return () => {
+         if (timerRef.current) {
+            clearTimeout(timerRef.current);
+            timerRef.current = null;
+         }
+      };
+   }, [confirmMenu]);
+
+
    return (
-      <Pressable onLongPress={() => setConfirmMenu(!confirmMenu)} >
-         <View className="p-3 border-black border-2 m-1 flex-row justify-between items-center bg-cyan-500">
+      <Pressable onLongPress={() => handleConfirmMenu()} >
+         <View className="p-3 border-black border-2 m-1 flex-row justify-between items-center bg-cyan-500 rounded-2xl">
             {confirmMenu == true ?
                (<Pressable onPress={() => handlePromiseUpdate()}><Text>Commitment done?</Text></Pressable>)
                :

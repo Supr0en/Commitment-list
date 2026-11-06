@@ -65,7 +65,7 @@ export default function App() {
    }
 
    return (
-      <View className="pt-10 px-2">
+      <View className="pt-10 px-2 bg-white">
          <View className='w-full flex-row align-middle p-2 justify-between'>
             <Text className='text-2xl font-extrabold text-blue-950'>Commitment list</Text>
             <Text className='text-2xl font-extrabold text-orange-600'>{streak} &#x1F525;</Text>

@@ -4,7 +4,7 @@
     "slug": "commitment-list",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/clLogo.png",
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true
@@ -20,7 +20,7 @@
       "package": "com.supr0en.commitmentlist"
     },
     "web": {
-      "favicon": "./assets/favicon.png",
+      "favicon": "./assets/clLogo.png",
       "bundler": "metro"
     },
     "extra": {
