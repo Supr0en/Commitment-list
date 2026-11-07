@@ -38,7 +38,7 @@ export default function PromiseModal({ promises, onSubmit }: PromiseModalProps) 
    }
    return (
       <View>
-         <View>
+         <View className="absolute flex w-full bottom-[-65px]">
             <Pressable onPress={() => setIsVisible(!isVisible)} className="border-2 border-black p-3 m-1 rounded-2xl">
                <Text>Create new Commitment</Text>
             </Pressable>
@@ -46,8 +46,8 @@ export default function PromiseModal({ promises, onSubmit }: PromiseModalProps) 
          <View>
             <Modal animationType="slide" transparent={true} visible={isVisible} >
                <View className="flex-col bg-white m-1 p-3 border-2 border-black h-[300px] w-[80%] items-center top-[150px] left-[10%] rounded-3xl">
-                  <Text className="text-2xl font-extrabold color-blue-950">Create a commitment</Text>
-                  <TextInput placeholder="New commitment" className="m-1 p-3 border-2 border-gray-200 bg-white w-full rounded-2xl" onChangeText={setPromiseName} />
+                  <Text className="text-2xl font-extrabold text-blue-950">Create a commitment</Text>
+                  <TextInput placeholder="New commitment" className="m-1 p-3 border-2 border-gray-200 bg-white w-full rounded-2xl text-black" onChangeText={setPromiseName} />
                   <View className="flex-row items-center justify-center ml-1 my-2">
                      <Text className="text-2xl font-bold mr-2">Days</Text>
                      <View className="flex flex-col items-center border-x-[1px] border-gray-200">
@@ -63,10 +63,10 @@ export default function PromiseModal({ promises, onSubmit }: PromiseModalProps) 
                      <Text className="text-2xl font-bold">Hours</Text>
                   </View>
                   <View className="flex-row  align-middle">
-                     <Pressable className="border-2 border-green-700 m-1 p-3 rounded-2xl" onPress={() => handleSubmit()}><Text className="color-green-700 font-bold">Create New Promise</Text></Pressable>
-                     <Pressable onPress={() => handleClose()} className="border-2 border-red-600 m-1 p-3 rounded-2xl"><Text className='color-red-600'>&#10006;</Text></Pressable>
+                     <Pressable className="border-2 border-green-700 m-1 p-3 rounded-2xl" onPress={() => handleSubmit()}><Text className="text-green-700 font-bold">Create New Commitment</Text></Pressable>
+                     <Pressable onPress={() => handleClose()} className="border-2 border-red-600 m-1 p-3 rounded-2xl"><Text className='text-red-600'>&#10006;</Text></Pressable>
                   </View>
-                  <Text className="color-red-500">{errorMessage}</Text>
+                  <Text className="text-red-500">{errorMessage}</Text>
                </View>
             </Modal >
          </View>

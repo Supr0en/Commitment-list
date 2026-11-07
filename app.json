@@ -4,7 +4,7 @@
     "slug": "commitment-list",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/clLogo.png",
+    "icon": "./assets/clLogov2.png",
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true
@@ -12,11 +12,10 @@
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
+        "foregroundImage": "./assets/clLogo.png",
+        "backgroundImage": "./assets/clLogo.png",
+        "monochromeImage": "./assets/clLogo.png"
       },
-      "predictiveBackGestureEnabled": false,
       "package": "com.supr0en.commitmentlist"
     },
     "web": {

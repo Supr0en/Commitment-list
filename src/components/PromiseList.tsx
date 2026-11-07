@@ -4,13 +4,15 @@ import Timer from "./Timer";
 import React from 'react';
 import { confirmPromise } from "../helpers/AsyncStorage";
 
-const PromiseItem = ({ id, name, endDate, onUpdate }: ItemProps) => {
+const PromiseItem = ({ id, name, endDate, onUpdate}: ItemProps) => {
    const [confirmMenu, setConfirmMenu] = React.useState<boolean>(false);
    const timerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
    const handlePromiseUpdate = async () => {
       try {
-         const updatedPromises = await confirmPromise(id)
-         onUpdate(updatedPromises);
+         const isExpired = new Date().getTime() > new Date(endDate).getTime();
+         const updatedPromises = await confirmPromise(id);
+         onUpdate(updatedPromises, isExpired);
       }
       catch (error) {
          console.error('handling promise update', error)
@@ -43,7 +45,7 @@ const PromiseItem = ({ id, name, endDate, onUpdate }: ItemProps) => {
             {confirmMenu == true ?
                (<Pressable onPress={() => handlePromiseUpdate()}><Text>Commitment done?</Text></Pressable>)
                :
-               (<><Text className="color-black">{name}</Text>
+               (<><Text className="text-black text-clip w-[75%]">{name}</Text>
                   <Timer start={new Date()} end={new Date(endDate)} /></>)
             }
          </View>

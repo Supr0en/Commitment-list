@@ -1,4 +1,4 @@
-import {TimerProps} from "../types";
+import { TimerProps } from "../types";
 import React from "react";
 import { View, Text } from "react-native";
 
@@ -23,7 +23,10 @@ export default function Timer({ start, end }: TimerProps) {
 
    return (
       <View>
-         {days <= 0 ? (<Text className="color-red-500 font-bold">{hours}h:{minutes}m:{seconds}s</Text>) : (<Text className="color-green-100 font-bold">{days}d:{hours}h:{minutes}m</Text>)}
+         {  hours <= 0 && minutes <= 0 && seconds <= 0 ? (<Text className="text-red-500 font-bold">expired</Text>) : (
+            days <= 0 ? (<Text className="text-red-500 font-bold">{hours}h:{minutes}m:{seconds}s</Text>) :
+               (<Text className="text-green-100 font-bold">{days}d:{hours}h:{minutes}m</Text>))
+         }
       </View>
    );
 };

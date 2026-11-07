@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, StatusBar } from "react-native";
 import React from "react";
 import './global.css'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -7,19 +7,19 @@ import PromiseList from "./src/components/PromiseList";
 import uuid from "react-native-uuid";
 import PromiseModal from "./src/components/PromiseModal";
 import { incrementStreak, resetStreak } from "./src/helpers/AsyncStorage";
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 export default function App() {
    const [promises, setPromises] = React.useState<Promise[]>([
       { id: uuid.v4(), name: 'Write this app', endDate: "2026-10-30" },
       { id: uuid.v4(), name: 'Write a email', endDate: "2026-11-15" },
-      { id: uuid.v4(), name: 'Finish assingment 1', endDate: "2026-10-26" }
+      { id: uuid.v4(), name: 'Finish assingment 1', endDate: "2026-10-26" },
    ]);
    const [streak, setStreak] = React.useState<string>("");
    const loadStreak = async () => {
       try {
          const promiseStreak = await AsyncStorage.getItem('Promise-streak');
          if (promiseStreak !== null) {
-            console.log(promiseStreak)
             setStreak(promiseStreak);
          }
       } catch (error) {
@@ -54,10 +54,9 @@ export default function App() {
       setPromises([...promises, data])
    }
 
-   // TODO: Possible add discard or freeze commitment/promise.
-   const updatePromisesState = (data: Promise[]) => {
-      setPromises(data);
-      updateStreakState(streak);
+   const updatePromisesState = (promises: Promise[], isExpired: boolean) => {
+      setPromises(promises);
+      if (!isExpired) updateStreakState(streak);
    }
    const updateStreakState = (streak: string) => {
       incrementStreak(streak);
@@ -65,15 +64,19 @@ export default function App() {
    }
 
    return (
-      <View className="pt-10 px-2 bg-white">
-         <View className='w-full flex-row align-middle p-2 justify-between'>
-            <Text className='text-2xl font-extrabold text-blue-950'>Commitment list</Text>
-            <Text className='text-2xl font-extrabold text-orange-600'>{streak} &#x1F525;</Text>
-         </View>
-         <View className="flex flex-col h-[90%] justify-between">
-            <PromiseList promises={promises} onUpdate={updatePromisesState} />
-            <PromiseModal promises={promises} onSubmit={updatePromiseState} />
-         </View>
-      </View>
+      <SafeAreaProvider className="bg-white">
+         <SafeAreaView className="bg-white">
+            <StatusBar barStyle="dark-content" />
+            <View className='w-full flex-row align-middle p-2 bg-white justify-between'>
+               <Text className='text-2xl font-extrabold text-blue-950'>Commitment list</Text>
+               <Text className='text-2xl font-extrabold text-orange-600'>{streak} &#x1F525;</Text>
+            </View>
+            <View className="flex flex-col h-[90%] p-2 justify-between bg-white">
+               <PromiseList promises={promises} onUpdate={updatePromisesState} />
+               <PromiseModal promises={promises} onSubmit={updatePromiseState} />
+            </View>
+         </SafeAreaView>
+      </SafeAreaProvider>
+
    );
 }
