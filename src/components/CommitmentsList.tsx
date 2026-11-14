@@ -1,18 +1,19 @@
 import { View, Text, FlatList, Pressable } from "react-native";
-import type { ItemProps, PromiseListProps } from "../types";
+import type { ItemProps, CommitmentListProps } from "../types";
 import Timer from "./Timer";
 import React from 'react';
-import { confirmPromise } from "../helpers/AsyncStorage";
+import { confirmCommitment } from "../helpers/AsyncStorage";
+import ConfirmCommitmentModal from "./ConfirmCommitmentModal";
 
-const PromiseItem = ({ id, name, endDate, onUpdate}: ItemProps) => {
+const CommitmentItem = ({ id, name, endDate, onUpdate }: ItemProps) => {
    const [confirmMenu, setConfirmMenu] = React.useState<boolean>(false);
    const timerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
-   const handlePromiseUpdate = async () => {
+   const handleCommitmentUpdate = async () => {
       try {
          const isExpired = new Date().getTime() > new Date(endDate).getTime();
-         const updatedPromises = await confirmPromise(id);
-         onUpdate(updatedPromises, isExpired);
+         const updatedCommitments = await confirmCommitment(id);
+         onUpdate(updatedCommitments, isExpired);
       }
       catch (error) {
          console.error('handling promise update', error)
@@ -43,7 +44,7 @@ const PromiseItem = ({ id, name, endDate, onUpdate}: ItemProps) => {
       <Pressable onLongPress={() => handleConfirmMenu()} >
          <View className="p-3 border-black border-2 m-1 flex-row justify-between items-center bg-cyan-500 rounded-2xl">
             {confirmMenu == true ?
-               (<Pressable onPress={() => handlePromiseUpdate()}><Text>Commitment done?</Text></Pressable>)
+               (<Pressable onPress={() => handleCommitmentUpdate()}><Text>Commitment done?</Text></Pressable>)
                :
                (<><Text className="text-black text-clip w-[75%]">{name}</Text>
                   <Timer start={new Date()} end={new Date(endDate)} /></>)
@@ -53,8 +54,10 @@ const PromiseItem = ({ id, name, endDate, onUpdate}: ItemProps) => {
    )
 };
 
-export default function PromiseList({ promises, onUpdate }: PromiseListProps) {
+export default function CommitmentList({ commitments, onUpdate }: CommitmentListProps) {
    return (
-      <FlatList data={promises} renderItem={({ item }) => <PromiseItem id={item.id} name={item.name} endDate={item.endDate} onUpdate={onUpdate} />} />
+      <View>
+         <FlatList data={commitments} renderItem={({ item }) => <CommitmentItem id={item.id} name={item.name} endDate={item.endDate} onUpdate={onUpdate} />} />
+      </View>
    )
 }

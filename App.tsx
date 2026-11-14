@@ -2,15 +2,15 @@ import { View, Text, StatusBar } from "react-native";
 import React from "react";
 import './global.css'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Promise } from "./src/interfaces";
-import PromiseList from "./src/components/PromiseList";
+import { Commitment } from "./src/interfaces";
 import uuid from "react-native-uuid";
-import PromiseModal from "./src/components/PromiseModal";
 import { incrementStreak, resetStreak } from "./src/helpers/AsyncStorage";
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-
+import CreateCommitmentModal from "./src/components/CreateCommitmentModal";
+import CommitmentsList from "./src/components/CommitmentsList";
+import ConfirmCommitmentModal from "./src/components/ConfirmCommitmentModal"
 export default function App() {
-   const [promises, setPromises] = React.useState<Promise[]>([
+   const [commitments, setCommitments] = React.useState<Commitment[]>([
       { id: uuid.v4(), name: 'Write this app', endDate: "2026-10-30" },
       { id: uuid.v4(), name: 'Write a email', endDate: "2026-11-15" },
       { id: uuid.v4(), name: 'Finish assingment 1', endDate: "2026-10-26" },
@@ -18,44 +18,44 @@ export default function App() {
    const [streak, setStreak] = React.useState<string>("");
    const loadStreak = async () => {
       try {
-         const promiseStreak = await AsyncStorage.getItem('Promise-streak');
-         if (promiseStreak !== null) {
-            setStreak(promiseStreak);
+         const CommitmentStreak = await AsyncStorage.getItem('Commitments-streak');
+         if (CommitmentStreak !== null) {
+            setStreak(CommitmentStreak);
          }
       } catch (error) {
          console.error('Error fetching streak', error);
       }
    }
-   const loadPromises = async () => {
+   const loadCommitments = async () => {
       try {
-         const storedTodos = await AsyncStorage.getItem('Promise-storage');
-         if (storedTodos !== null) {
-            setPromises(JSON.parse(storedTodos));
+         const storedCommitments = await AsyncStorage.getItem('Commitments-storage');
+         if (storedCommitments !== null) {
+            setCommitments(JSON.parse(storedCommitments));
          }
       } catch (error) {
-         console.error('Error loading todos', error);
+         console.error('Error loading Commitment', error);
       }
    }
-   const checkExpiredPromises = () => {
-      promises.forEach((promise) => {
-         if (new Date().getTime() < new Date(promise.endDate).getTime()) {
+   const checkExpiredCommitments = () => {
+      commitments.forEach((commitment) => {
+         if (new Date().getTime() < new Date(commitment.endDate).getTime()) {
             resetStreak();
          }
       })
    }
 
    React.useEffect(() => {
-      loadPromises();
+      loadCommitments();
       loadStreak();
-      checkExpiredPromises();
+      checkExpiredCommitments();
    }, []);
 
-   const updatePromiseState = (data: Promise) => {
-      setPromises([...promises, data])
+   const updateCommitmentState = (data: Commitment) => {
+      setCommitments([...commitments, data])
    }
 
-   const updatePromisesState = (promises: Promise[], isExpired: boolean) => {
-      setPromises(promises);
+   const updateCommitmentsState = (commitments: Commitment[], isExpired: boolean) => {
+      setCommitments(commitments);
       if (!isExpired) updateStreakState(streak);
    }
    const updateStreakState = (streak: string) => {
@@ -72,8 +72,11 @@ export default function App() {
                <Text className='text-2xl font-extrabold text-orange-600'>{streak} &#x1F525;</Text>
             </View>
             <View className="flex flex-col h-[90%] p-2 justify-between bg-white">
-               <PromiseList promises={promises} onUpdate={updatePromisesState} />
-               <PromiseModal promises={promises} onSubmit={updatePromiseState} />
+               <CommitmentsList commitments={commitments} onUpdate={updateCommitmentsState} />
+               <View className="flex-row">
+                  <ConfirmCommitmentModal />
+                  <CreateCommitmentModal commitments={commitments} onSubmit={updateCommitmentState} />
+               </View>
             </View>
          </SafeAreaView>
       </SafeAreaProvider>

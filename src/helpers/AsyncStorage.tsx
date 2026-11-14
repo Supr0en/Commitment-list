@@ -1,53 +1,53 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Promise } from "../interfaces"
+import { Commitment } from "../interfaces"
 import uuid from 'react-native-uuid';
 
-export const loadPromises = async () => {
+export const loadCommitments = async () => {
    try {
-      const storedPromises = await AsyncStorage.getItem('Promise-storage');
-      if (storedPromises !== null) {
-         return JSON.parse(storedPromises);
+      const storedCommitments = await AsyncStorage.getItem('Commitment-storage');
+      if (storedCommitments !== null) {
+         return JSON.parse(storedCommitments);
       }
    } catch (error) {
-      console.error('Error loading todos', error);
+      console.error('Error loading Commitments', error);
    }
 }
 
-export const savePromises = async (updatedPromises: Promise[]) => {
+export const saveCommitments = async (updatedCommitments: Commitment[]) => {
    try {
-      await AsyncStorage.setItem('Promise-storage', JSON.stringify(updatedPromises));
+      await AsyncStorage.setItem('Commitment-storage', JSON.stringify(updatedCommitments));
    } catch (error) {
-      console.error('Error saving Promises', error);
+      console.error('Error saving Commitments', error);
    }
 }
 
-export const createPromise = (name: string, endDate: string) => {
+export const createCommitment = (name: string, endDate: string) => {
    const newUUID = uuid.v4();
-   const newPromise: Promise = {
+   const newCommitment: Commitment = {
       id: newUUID,
       name: name,
       endDate: endDate,
    }
-   return newPromise;
+   return newCommitment;
 }
 
-export const confirmPromise = async (id: string) => {
+export const confirmCommitment = async (id: string) => {
    try {
-      const promises = await loadPromises();
-      const filteredPromises = promises.filter((item: Promise) => item.id !== id);
-      savePromises(filteredPromises);
-      return filteredPromises;
+      const commitments = await loadCommitments();
+      const filteredCommitments = commitments.filter((item: Commitment) => item.id !== id);
+      saveCommitments(filteredCommitments);
+      return filteredCommitments;
    } catch (error) {
-      console.error('Error confirm completion of promise', error)
+      console.error('Error confirm completion of commitments', error)
    }
 }
 
 export const loadStreak = async () => {
    try {
-      const promiseStreak = await AsyncStorage.getItem('Promise-streak');
-      if (promiseStreak !== null) {
-         console.log(promiseStreak)
-         return promiseStreak;
+      const commitmentsStreak = await AsyncStorage.getItem('Commitments-streak');
+      if (commitmentsStreak !== null) {
+         console.log(commitmentsStreak)
+         return commitmentsStreak;
       }
    } catch (error) {
       console.error('Error fetching streak', error);
@@ -55,15 +55,15 @@ export const loadStreak = async () => {
 }
 export const incrementStreak = async (curStreak: string) => {
    try {
-      AsyncStorage.setItem('Promise-streak', (+curStreak + 1).toString());
+      AsyncStorage.setItem('Commitments-streak', (+curStreak + 1).toString());
    } catch (error) {
-      console.error('Error reseting Streak', error);
+      console.error('Error incrementing Streak', error);
    }
 }
 
 export const resetStreak = async () => {
    try {
-      AsyncStorage.setItem('Promise-streak', "0");
+      AsyncStorage.setItem('Commitments-streak', "0");
    } catch (error) {
       console.error('Error reseting Streak', error);
    }

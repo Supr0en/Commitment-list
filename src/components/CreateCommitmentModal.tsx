@@ -1,16 +1,16 @@
 import { View, Text, Modal, Pressable, TextInput } from 'react-native';
 import React from 'react';
-import { createPromise, savePromises } from '../helpers/AsyncStorage';
-import { Promise } from '../interfaces';
+import { createCommitment, saveCommitments } from '../helpers/AsyncStorage';
+import { Commitment } from '../interfaces';
 
-interface PromiseModalProps {
-   promises: Promise[];
-   onSubmit: (data: Promise) => void;
+interface CreateCommitmentModalProps {
+   commitments: Commitment[];
+   onSubmit: (data: Commitment) => void;
 }
 
-export default function PromiseModal({ promises, onSubmit }: PromiseModalProps) {
+export default function CreateCommitmentModal({ commitments, onSubmit }: CreateCommitmentModalProps) {
    const [isVisible, setIsVisible] = React.useState<boolean>(false);
-   const [promiseName, setPromiseName] = React.useState<string>("");
+   const [commitmentName, setCommitmentName] = React.useState<string>("");
    const [days, setDays] = React.useState<number>(7);
    const [hours, setHours] = React.useState<number>(12);
    const [errorMessage, setErrorMessage] = React.useState<string>("");
@@ -19,14 +19,14 @@ export default function PromiseModal({ promises, onSubmit }: PromiseModalProps) 
       const curDate = new Date()
       const endDate: string = curDate.getFullYear() + "-" + (curDate.getMonth() + 1) + "-" + (curDate.getDate() + days) + "T" + (curDate.getHours() + hours + ":00");
       try {
-         if (promiseName.length == 0) {
+         if (commitmentName.length == 0) {
             setErrorMessage("CommitmentName has to have input");
             return;
          }
-         const newPromise: Promise = createPromise(promiseName, endDate);
-         savePromises([...promises, newPromise])
+         const newCommitment: Commitment = createCommitment(commitmentName, endDate);
+         saveCommitments([...commitments, newCommitment])
          setIsVisible(!isVisible);
-         onSubmit(newPromise);
+         onSubmit(newCommitment);
       } catch (error) {
          console.error("Error while handling submit", error);
          setErrorMessage("Something when't wrong in addign new Commitment")
@@ -38,7 +38,7 @@ export default function PromiseModal({ promises, onSubmit }: PromiseModalProps) 
    }
    return (
       <View>
-         <View className="absolute flex w-full bottom-[-65px]">
+         <View className="flex bottom-[-65px]">
             <Pressable onPress={() => setIsVisible(!isVisible)} className="border-2 border-black p-3 m-1 rounded-2xl">
                <Text>Create new Commitment</Text>
             </Pressable>
@@ -47,7 +47,7 @@ export default function PromiseModal({ promises, onSubmit }: PromiseModalProps) 
             <Modal animationType="slide" transparent={true} visible={isVisible} >
                <View className="flex-col bg-white m-1 p-3 border-2 border-black h-[300px] w-[80%] items-center top-[150px] left-[10%] rounded-3xl">
                   <Text className="text-2xl font-extrabold text-blue-950">Create a commitment</Text>
-                  <TextInput placeholder="New commitment" className="m-1 p-3 border-2 border-gray-200 bg-white w-full rounded-2xl text-black" onChangeText={setPromiseName} />
+                  <TextInput placeholder="New commitment" className="m-1 p-3 border-2 border-gray-200 bg-white w-full rounded-2xl text-black" onChangeText={setCommitmentName} />
                   <View className="flex-row items-center justify-center ml-1 my-2">
                      <Text className="text-2xl font-bold mr-2">Days</Text>
                      <View className="flex flex-col items-center border-x-[1px] border-gray-200">
@@ -63,12 +63,12 @@ export default function PromiseModal({ promises, onSubmit }: PromiseModalProps) 
                      <Text className="text-2xl font-bold">Hours</Text>
                   </View>
                   <View className="flex-row  align-middle">
-                     <Pressable className="border-2 border-green-700 m-1 p-3 rounded-2xl" onPress={() => handleSubmit()}><Text className="text-green-700 font-bold">Create New Commitment</Text></Pressable>
+                     <Pressable className="border-2 border-green-700 m-1 p-3 rounded-2xl" onPress={() => handleSubmit()}><Text className="text-green-700 font-bold">Create new commitment</Text></Pressable>
                      <Pressable onPress={() => handleClose()} className="border-2 border-red-600 m-1 p-3 rounded-2xl"><Text className='text-red-600'>&#10006;</Text></Pressable>
                   </View>
                   <Text className="text-red-500">{errorMessage}</Text>
                </View>
-            </Modal >
+            </Modal>
          </View>
       </View >
    )

@@ -12,9 +12,9 @@
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/clLogo.png",
-        "backgroundImage": "./assets/clLogo.png",
-        "monochromeImage": "./assets/clLogo.png"
+        "foregroundImage": "./assets/clLogov2.png",
+        "backgroundImage": "./assets/clLogov2.png",
+        "monochromeImage": "./assets/clLogov2.png"
       },
       "package": "com.supr0en.commitmentlist"
     },
